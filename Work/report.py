@@ -2,6 +2,7 @@
 #
 # Exercise 2.4
 import csv
+from lib2to3.pytree import convert
 
 def read_portfolio(filename):
     '''Returns the content of a portfolio file in a list of dictionaries'''
