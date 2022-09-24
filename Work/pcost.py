@@ -1,7 +1,7 @@
 # pcost.py
 #
 # Exercises 1.27, 1.28, and 1.30
-import os, sys
+import sys, csv
 
 def portfolio_cost(filename):
 #Handling potential errors
@@ -13,28 +13,17 @@ def portfolio_cost(filename):
 
 #Executing the function
     with open('Data/' + filename, 'rt') as f:
-        headers = next(f).split(',')
+        rows = csv.reader(f)
+        headers = next(rows)
         total_cost = 0
-        for line in f:
-            row = line.split(',')
+        for num, row in enumerate(rows, start=1):
+            record = dict(zip(headers, row))
             try:
-                int(row[1])
+                num_shares = int(record['shares'])
+                unit_cost = float(record['price'])
+                total_cost += num_shares*unit_cost
             except ValueError:
-                print('Missing/non-convertible value converted to zero')
-                num_shares = 0
-                row[1] = 0
-            else:
-                num_shares = int(row[1])
-           
-            try:
-                float(row[2])
-            except ValueError:
-                print('Missing/non-convertible value converted to zero')
-                total_cost = 0
-                row[2] = 0
-            else:
-                unit_cost = float(row[2])
-            total_cost += num_shares*unit_cost
+                print('Row num: '+ str(num) +'. Bad row: ' + str(row))
     return total_cost
 
 #Main program
