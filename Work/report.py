@@ -6,6 +6,7 @@
 # Exercise 2.4
 from fileparse import parse_csv
 import stock
+import tableformat
 
 def read_portfolio(filename):
     '''Returns the content of a portfolio file in a list of dictionaries'''
@@ -45,29 +46,40 @@ def make_report(portfolio, prices):
     
     return report
 
-def print_report(report):
+def print_report(reportdata, formatter):
     '''
     Prints a report in a nicely formatted fashin
     '''
-    headers = ('Name', 'Shares', 'Price', 'Change')
-    print('%10s %10s %10s %10s' % headers)
-    print('---------- ---------- ---------- -----------')
-    for r in report:
-        print('%10s %10d %10.2f %10.2f' % r)
+    formatter.headings(['Name', 'Shares', 'Price', 'Change'])
+    
+    for name, shares, price, change in reportdata:
+        rowdata = [ name, str(shares), f'{price:0.2f}', f'{change:0.2f}' ]
+        formatter.row(rowdata)
 
-def portfolio_report(portfolio_file, prices_file):
+def portfolio_report(portfolio_file, prices_file, fmt='txt'):
     '''
     Prints a portfolio report given portfolio and price files
+    fmt indicates the output format and can be txt (default), csv, and html
     '''
+    #Read the data from files
     portfolio = read_portfolio(portfolio_file)
     prices = read_prices(prices_file)
-    report = make_report(portfolio, prices)
-    print_report(report)
+    
+    #Assemble the reportdata to be printed
+    reportdata = make_report(portfolio, prices)
+    
+    #Print the report
+    formatter = tableformat.create_formatter(fmt)
+    print_report(reportdata, formatter)
 
 def main(argv):
-    if len(argv) != 3:
-        raise SystemExit(f'Usage: {argv[0]} ' 'portfile pricefile')
-    portfolio_report(argv[1], argv[2])
+    num_args = len(argv)
+    if num_args < 3 or num_args > 4:
+        raise SystemExit(f'Usage: {argv[0]} ' 'portfile pricefile fmt')
+    elif num_args == 3:
+        portfolio_report(argv[1], argv[2])
+    else:
+        portfolio_report(argv[1], argv[2], argv[3])
 
 if __name__ == '__main__':
     import sys
