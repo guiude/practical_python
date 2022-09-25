@@ -1,17 +1,21 @@
+#!/usr/bin/env python3
+#report.py
+
 # report.py
 #
 # Exercise 2.4
-import csv
 from fileparse import parse_csv
 
 def read_portfolio(filename):
     '''Returns the content of a portfolio file in a list of dictionaries'''
-    portfolio = parse_csv(filename, select=['name','shares','price'], types=[str,int,float])
+    with open(filename) as lines:
+        portfolio = parse_csv(lines, select=['name','shares','price'], types=[str,int,float])
     return portfolio
 
 def read_prices(filename):
     '''Returns the content of a price file in a dictionary'''
-    prices = parse_csv(filename, types=[str,float], has_headers=False)
+    with open(filename) as lines:
+        prices = parse_csv(lines, types=[str,float], has_headers=False)
     return dict(prices)
 
 def calc_portfolio_value(portfolio, prices):
@@ -58,6 +62,11 @@ def portfolio_report(portfolio_file, prices_file):
     report = make_report(portfolio, prices)
     print_report(report)
 
-#time to read the data and prints the report
-#'Data/portfoliodate.csv'
-#'Data/prices.csv'
+def main(argv):
+    if len(argv) != 3:
+        raise SystemExit(f'Usage: {argv[0]} ' 'portfile pricefile')
+    portfolio_report(argv[1], argv[2])
+
+if __name__ == '__main__':
+    import sys
+    main(sys.argv)
