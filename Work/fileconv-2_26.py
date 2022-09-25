@@ -1,6 +1,6 @@
 #Exercise 2.26
 import os, csv
-import pprint
+from pprint import pprint
 
 
 def read_stocks(filename):
@@ -27,4 +27,4 @@ def read_stocks(filename):
 #main program
 file = 'Data/dowstocks.csv'
 portfolio = read_stocks(file)
-pprint.pprint(portfolio)
+pprint(portfolio)

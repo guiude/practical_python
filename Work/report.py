@@ -2,40 +2,17 @@
 #
 # Exercise 2.4
 import csv
-from lib2to3.pytree import convert
+from fileparse import parse_csv
 
 def read_portfolio(filename):
     '''Returns the content of a portfolio file in a list of dictionaries'''
-    portfolio = []
-
-    with open(filename, 'rt') as f:
-        rows = csv.reader(f)
-        headers = next(rows)
-        for num, row in enumerate(rows, start=1):
-            try:
-                record = dict(zip(headers, row))
-                correct_record = {
-                    'name': record['name'],
-                    'shares': int(record['shares']),
-                    'price': float(record['price'])
-                }
-                portfolio.append(correct_record)
-            except ValueError:
-                print('Row num: '+ str(num) +'. Bad row: ' + str(row))
+    portfolio = parse_csv(filename, select=['name','shares','price'], types=[str,int,float])
     return portfolio
 
 def read_prices(filename):
     '''Returns the content of a price file in a dictionary'''
-    f = open(filename, 'r')
-    rows = csv.reader(f)
-    prices = {}
-
-    for row in rows:
-        try:
-            prices[row[0]] = float(row[1])
-        except IndexError:
-            pass 
-    return prices
+    prices = parse_csv(filename, types=[str,float], has_headers=False)
+    return dict(prices)
 
 def calc_portfolio_value(portfolio, prices):
     '''Calculates the current value of a portfolio given a set of prices
@@ -62,13 +39,25 @@ def make_report(portfolio, prices):
     
     return report
 
-#time to read the data and prints the report
-portfolio = read_portfolio('Data/portfoliodate.csv')
-prices = read_prices('Data/prices.csv')
-report = make_report(portfolio, prices)
+def print_report(report):
+    '''
+    Prints a report in a nicely formatted fashin
+    '''
+    headers = ('Name', 'Shares', 'Price', 'Change')
+    print('%10s %10s %10s %10s' % headers)
+    print('---------- ---------- ---------- -----------')
+    for r in report:
+        print('%10s %10d %10.2f %10.2f' % r)
 
-headers = ('Name', 'Shares', 'Price', 'Change')
-print('%10s %10s %10s %10s' % headers)
-print('---------- ---------- ---------- -----------')
-for r in report:
-    print('%10s %10d %10.2f %10.2f' % r)
+def portfolio_report(portfolio_file, prices_file):
+    '''
+    Prints a portfolio report given portfolio and price files
+    '''
+    portfolio = read_portfolio(portfolio_file)
+    prices = read_prices(prices_file)
+    report = make_report(portfolio, prices)
+    print_report(report)
+
+#time to read the data and prints the report
+#'Data/portfoliodate.csv'
+#'Data/prices.csv'
