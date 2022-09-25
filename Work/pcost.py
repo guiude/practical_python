@@ -13,7 +13,7 @@ def main(argv):
 
     #Calculating the portfolio cost
     portfolio = report.read_portfolio(filename)
-    cost = sum([s['price']*s['shares'] for s in portfolio])
+    cost = sum([s.cost() for s in portfolio])
 
     print('Total cost:', cost)
 

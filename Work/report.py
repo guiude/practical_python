@@ -5,11 +5,13 @@
 #
 # Exercise 2.4
 from fileparse import parse_csv
+import stock
 
 def read_portfolio(filename):
     '''Returns the content of a portfolio file in a list of dictionaries'''
     with open(filename) as lines:
-        portfolio = parse_csv(lines, select=['name','shares','price'], types=[str,int,float])
+        portdicts = parse_csv(lines, select=['name','shares','price'], types=[str,int,float])
+        portfolio = [stock.Stock(d['name'], d['shares'], d['price']) for d in portdicts]
     return portfolio
 
 def read_prices(filename):
@@ -26,9 +28,9 @@ def calc_portfolio_value(portfolio, prices):
     initial_value = 0
 
     for company in portfolio:
-        curr_price = prices[company['name']]
-        initial_value += company['shares'] * company['price']
-        current_value += company['shares'] * curr_price
+        curr_price = prices[company.name]
+        initial_value += company.cost()
+        current_value += company.shares * curr_price
     
     return(current_value, current_value - initial_value)
 
@@ -37,9 +39,9 @@ def make_report(portfolio, prices):
     report = []
 
     for company in portfolio:
-        curr_price = prices[company['name']]
-        gain = curr_price - company['price']
-        report.append((company['name'], company['shares'], curr_price, gain))
+        curr_price = prices[company.name]
+        gain = curr_price - company.price
+        report.append((company.name, company.shares, curr_price, gain))
     
     return report
 
