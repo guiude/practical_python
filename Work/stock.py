@@ -11,6 +11,10 @@ class Stock:
         except:
             raise RuntimeError('price in class Stock must be initialized with a float')
     
+    #Method to redefine the Stock object representation
+    def __repr__(self) -> str:
+        return f'Stock({self.name}, {self.shares}, {self.price})'
+
     #Method that calculates the stock object cost
     def cost(self):
         return self.shares * self.price
