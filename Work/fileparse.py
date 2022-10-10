@@ -5,7 +5,7 @@ import csv
 
 from pyparsing import And
 
-def parse_csv(lines, select=None, types=None, has_headers=True, delimiter=None):
+def parse_csv(lines, select=None, types=None, has_headers=True, delimiter=None, silence_errors=False):
     '''
     Parse a CSV file ito a list of records
     select is a list containing the subset of columns to be returned
@@ -53,8 +53,9 @@ def parse_csv(lines, select=None, types=None, has_headers=True, delimiter=None):
             try:
                 row = [func(val) for func, val in zip(types, row)]
             except ValueError as ve:
-                print(f'Row {rowno}: Could not convert {row}')
-                print(f'Row {rowno}: Reason: ', ve)
+                if not silence_errors:
+                    print(f'Row {rowno}: Could not convert {row}')
+                    print(f'Row {rowno}: Reason: ', ve)
                 continue
         
         #preparing the record to be appended
