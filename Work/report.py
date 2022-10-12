@@ -12,10 +12,9 @@ from portfolio import Portfolio
 def read_portfolio(filename, **opts):
     '''Returns the content of a portfolio file in a list of dictionaries'''
     with open(filename) as lines:
-        portdicts = parse_csv(lines,select=['name','shares','price'], types=[str,int,float], **opts)
-    
-    portfolio = [stock.Stock(**d) for d in portdicts]  
-    return Portfolio(portfolio)
+        portfolio = Portfolio.from_csv(lines)
+
+    return portfolio
 
 def read_prices(filename):
     '''Returns the content of a price file in a dictionary'''
