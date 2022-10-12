@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 #ticker.py
 
-from follow import follow
+from .follow import follow
 import csv
-import report
-import tableformat
+from . import report
+from . import tableformat
 
 def parse_stock_data(lines):
     rows = csv.reader(lines)

@@ -1,8 +1,7 @@
-#!/usr/bin/env python3
 # pcost.py
 #
 # Exercises 1.27, 1.28, and 1.30
-import report
+from . import report
 
 def portfolio_cost(filename):
     '''
@@ -16,13 +15,9 @@ def main(argv):
     if len(argv) == 2:
         filename = argv[1]
     else:
-        filename = 'Data/portfolio.csv'
-
-    #Calculating the portfolio cost
-    portfolio = report.read_portfolio(filename)
-    cost = sum([s.cost() for s in portfolio])
-
-    print('Total cost:', cost)
+        filename = 'portfolio.csv'
+    
+    print('Total cost:', portfolio_cost(filename))
 
 if __name__ == '__main__':
     import sys

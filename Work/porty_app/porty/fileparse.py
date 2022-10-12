@@ -3,7 +3,8 @@
 # Exercise 3.3
 import csv
 
-from pyparsing import And
+import logging
+log = logging.getLogger(__name__)
 
 def parse_csv(lines, select=None, types=None, has_headers=True, delimiter=None, silence_errors=False):
     '''
@@ -54,8 +55,8 @@ def parse_csv(lines, select=None, types=None, has_headers=True, delimiter=None, 
                 row = [func(val) for func, val in zip(types, row)]
             except ValueError as ve:
                 if not silence_errors:
-                    print(f'Row {rowno}: Could not convert {row}')
-                    print(f'Row {rowno}: Reason: ', ve)
+                    log.warning("Row %d: Couldn't convert %s", rowno, row)
+                    log.debug("Row %d: Reason %s", rowno, ve)
                 continue
         
         #preparing the record to be appended
